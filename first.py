@@ -2,23 +2,24 @@ import json
 import re
 import datetime
 
+
 class NoteManager:
-    def load_tasks(self, user):
+    def load_tasks(self, user: str)->list:
         try:
-            with open(f'{user}.json', 'r') as file:
-               data = json.load(file)
+            with open(f'{user}.json', 'r', encoding='utf-8') as file:
+                data = json.load(file)
             return data
         except FileNotFoundError:
             return []
-        
+
     def save_tasks(self):
-        with open(f'{self.user}.json', 'w') as file:
+        with open(f'{self.user}.json', 'w', encoding='utf-8') as file:
             json.dump(self.tasks, file, indent=4, ensure_ascii=False)
-    
+
     def cmd_list(self):
         for task in self.tasks:
             yield task['name']
-    
+
     def cmd_add(self, name):
         task = {
             'name': name,
@@ -50,7 +51,7 @@ class NoteManager:
 
         while True:
             cmd = input(f'任务：{name},请输入需要执行的操作(update+key+value/look/exit) ').strip().split()
-            
+
             action = cmd[0]
 
             if action == 'update':
@@ -91,7 +92,7 @@ class NoteManager:
             command = input("请输入命令(add/update/list/delete/exit)+任务名称 ").strip().split()
             if not command:
                 continue
-            
+
             action = command[0].lower()
 
             # 需要任务名称的命令（add/update/del）必须检查参数长度
@@ -122,6 +123,7 @@ class NoteManager:
         self.user = user
         self.tasks = self.load_tasks(user)
 
+
 if __name__ == '__main__':
     while True:
         user_input = input("请输入用户名（数字、字母） ").strip()
@@ -134,6 +136,3 @@ if __name__ == '__main__':
     print(f'*****{user}*****')
     ob = NoteManager(user)
     ob.run()
-    
-
-
